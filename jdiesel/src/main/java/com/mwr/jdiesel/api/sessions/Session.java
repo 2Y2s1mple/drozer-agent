@@ -4,6 +4,7 @@ import android.os.Looper;
 
 import com.mwr.jdiesel.api.InvalidMessageException;
 import com.mwr.jdiesel.api.Protobuf.Message;
+import com.mwr.jdiesel.api.handlers.FileTransformMessageHandler;
 import com.mwr.jdiesel.api.handlers.MessageHandler;
 import com.mwr.jdiesel.api.handlers.ReflectionMessageHandler;
 import com.mwr.jdiesel.api.links.Link;
@@ -15,7 +16,8 @@ public class Session extends AbstractSession {
 	private Link connector = null;
 	public ObjectStore object_store = new ObjectStore();
 	private MessageHandler reflection_message_handler = new ReflectionMessageHandler(this);
-	
+	private MessageHandler file_transform_message_handler = new FileTransformMessageHandler(this);
+
 	public Session(Link connector) {
 		super();
 		
@@ -32,7 +34,10 @@ public class Session extends AbstractSession {
 	
 	@Override
 	protected Message handleMessage(Message message) throws InvalidMessageException {
-		return this.reflection_message_handler.handle(message);
+		if (message.getType() == Message.MessageType.FILE_TRANSFORM_REQUEST)
+			return this.file_transform_message_handler.handle(message);
+		else
+			return this.reflection_message_handler.handle(message);
 	}
 	
 	@Override

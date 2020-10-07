@@ -81,7 +81,15 @@ public abstract class AbstractConnection extends Thread {
 			case SYSTEM_RESPONSE:
 				response = this.handleSystemResponse(message);
 				break;
-				
+
+			case FILE_TRANSFORM_REQUEST:
+				response = this.handleFileTransformRequest(message);
+				break;
+
+			case FILE_TRANSFORM_RESPONSE:
+				response = this.handleFileTransformResponse(message);
+				break;
+
 			default:
 				throw new UnexpectedMessageException(message.getType());
 			}
@@ -100,7 +108,9 @@ public abstract class AbstractConnection extends Thread {
 	protected abstract Message handleReflectionResponse(Message message) throws InvalidMessageException;
 	protected abstract Message handleSystemRequest(Message message) throws InvalidMessageException;
 	protected abstract Message handleSystemResponse(Message message) throws InvalidMessageException;
-	
+	protected abstract Message handleFileTransformRequest(Message message) throws InvalidMessageException;
+	protected abstract Message handleFileTransformResponse(Message message) throws InvalidMessageException;
+
 	/**
 	 * @return true, if there are sessions associated with this Connection
 	 */

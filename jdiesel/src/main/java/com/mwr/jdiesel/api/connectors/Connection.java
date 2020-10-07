@@ -101,7 +101,22 @@ public class Connection extends AbstractConnection implements SecureConnection {
 	protected Message handleReflectionResponse(Message message) {
 		return null;
 	}
-	
+	@Override
+
+	protected Message handleFileTransformRequest(Message message) {
+        Session session = this.getConnector().getSession(message.getFileTransformRequest().getSessionId());
+
+        if(session != null)
+        	session.deliverMessage(message);
+
+        return null;
+	}
+
+	@Override
+	protected Message handleFileTransformResponse(Message message) {
+		return null;
+	}
+
 	@Override
 	protected Message handleSystemRequest(Message message) {
 		return this.system_message_handler.handle(message);
