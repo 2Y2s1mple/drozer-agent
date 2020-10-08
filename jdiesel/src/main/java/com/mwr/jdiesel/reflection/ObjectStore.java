@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.util.SparseArray;
 
+import dalvik.system.DexClassLoader;
+
 public class ObjectStore {
 	
 	private SparseArray<Object> objects = new SparseArray<Object>();
@@ -16,7 +18,12 @@ public class ObjectStore {
 	}
 
 	public void clear() {
-		this.objects.clear();
+		for (int i = 0; i < objects.size(); i++) {
+			Object o = objects.valueAt(i);
+			// don't delete reference of DexClassLoader
+			if (o != null && !objects.valueAt(i).getClass().equals(DexClassLoader.class))
+				objects.setValueAt(i, null);
+		}
 	}
 	
 	public Object get(int ref) {
